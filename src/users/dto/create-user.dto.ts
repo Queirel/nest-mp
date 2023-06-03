@@ -1,10 +1,13 @@
-import { IsString } from "class-validator";
+import { IsInt, IsPositive, IsString, Min, MinLength, Validate, isOctal } from "class-validator";
 
 export class CreateUserDto {
 
-    // @IsString()
-    // readonly id:string;
+    @IsInt()
+    @IsPositive()
+    @Min(1)
+    no: number;
 
     @IsString()
-    readonly name: string;
+    @MinLength(1)
+    name: string;
 }

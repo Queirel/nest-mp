@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { SeedService } from './seed.service';
-import { USERS_SEED } from './data/users.seed';
+// import { USERS_SEED } from './data/users.seed';
 
 @Controller('seed')
 export class SeedController {
@@ -8,7 +8,8 @@ export class SeedController {
 
   @Get()
   findAll() {
-    return this.seedService.populateDB();
+    return this.seedService.excecuteSeed()
+    // return this.seedService.populateDB();
   }
 
 }

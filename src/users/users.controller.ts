@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Post, HttpCode, HttpStatus, Get, Param, Patch, Delete} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto, UpdateUserDto  } from './dto';
+import { ParseMongoIdPipe } from 'src/common/pipes/parse-mongo-id/parse-mongo-id.pipe';
 
 @Controller('users')
 export class UsersController {
@@ -14,26 +15,27 @@ export class UsersController {
         return this.usersService.findAll()
     }
 
-    @Get(':id')
-    getById( @Param('id', ParseUUIDPipe) id: string ) {
-        return this.usersService.findById(id)
+    @Get(':term')
+    getById( @Param('term') term: string ) {
+        return this.usersService.findById(term)
     }
 
     @Post()
+    // @HttpCode(HttpStatus.CREATED)
     createUser(
         @Body() createUserDto:CreateUserDto){
-        return this.usersService.userCreate(createUserDto)
+        return this.usersService.create(createUserDto)
     }
 
-    @Patch(':id')
+    @Patch(':term')
     updateUser( 
-        @Param('id', ParseUUIDPipe ) id: string, 
+        @Param('term' ) term: string, 
         @Body() updateUserDto:UpdateUserDto ){
-        return this.usersService.userUpdate(id,updateUserDto)
+        return this.usersService.userUpdate(term,updateUserDto)
     }
 
     @Delete(':id')
-    deleteUser( @Param('id', ParseUUIDPipe ) id: string ){
+    deleteUser( @Param('id', ParseMongoIdPipe ) id: string ){
         return this.usersService.userDelete(id)
     }
 }
