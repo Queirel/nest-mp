@@ -1,27 +1,35 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
 import axios, { AxiosInstance } from 'axios';
 import { UserResponse } from './interfaces/user-response.interface';
-// import { USERS_SEED } from './data/users.seed';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from 'src/users/entities/user.entity';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class SeedService {
 
   private readonly axios:AxiosInstance = axios
 
-  // constructor(
-  //   // private readonly userService:UsersService
-  // ){}
+  constructor(
+    @InjectModel(User.name)
+    private readonly userModel: Model<User>,
+  ) {}  
 
-// populateDB(){
-//   return this.userService.fillUserDB(USERS_SEED)
-// }
 async excecuteSeed(){
-  const {data} = await this.axios.get<UserResponse>('https://rickandmortyapi.com/api/character')
-  data.results.forEach(({id, name}) => {
-    console.log(name, id)
-   })
-   return data.results
+  await this.userModel.deleteMany({})
+  let array:{name:string, no:number}[] = []
+  let i
+  for(i=1; i<40; i++){
+    const {data} = await this.axios.get<UserResponse>(`https://rickandmortyapi.com/api/character?page=${i}`)
+    data.results.forEach(async({id, name}) => {
+      var no = id
+      array.push({name,no})
+    })
+  }
+
+    await this.userModel.insertMany(array)
+
+   return 'Seeds done' 
   }
  
 

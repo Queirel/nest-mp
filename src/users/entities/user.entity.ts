@@ -4,12 +4,11 @@ import { Document } from "mongoose";
 @Schema()
 export class User extends Document {
     @Prop({
-        unique: true,
         index: true
     })
     name: string;
 
-    @Prop({
+    @Prop({ 
         unique: true,
         index: true
     })

@@ -1,16 +1,21 @@
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ConfigModule } from '@nestjs/config';
+import { CommonModule } from './common/common.module';
 import { UsersModule } from './users/users.module';
 import { SeedModule } from './seed/seed.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { CommonModule } from './common/common.module';
+import { EnvConfiguration } from './config/app.config';
+import { joiValidationSchema } from './config/joi.validation';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      load: [EnvConfiguration],
+      validationSchema: joiValidationSchema
+    }),
     UsersModule,
     SeedModule,
-    MongooseModule.forRoot(
-      'mongodb+srv://marketplace:wuqjcLMhGwcvcUGb@cluster0.35c31bo.mongodb.net/marketplace?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.MONGODBURL),
     CommonModule,
   ],
   controllers: [],
